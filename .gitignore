@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.production
+.env.development
+
+# Uploaded media files — these are served from the backend, not git
+nyatony-biograph/backend/uploads/images/*
+nyatony-biograph/backend/uploads/music/*
+nyatony-biograph/backend/uploads/videos/*
+
+# Keep the folder structure but not the files
+!nyatony-biograph/backend/uploads/images/.gitkeep
+!nyatony-biograph/backend/uploads/music/.gitkeep
+!nyatony-biograph/backend/uploads/videos/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# TypeScript cache
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Package manager locks (keep package-lock.json, ignore yarn.lock)
+yarn.lock
+
+# Sharp binary
+.next/cache
