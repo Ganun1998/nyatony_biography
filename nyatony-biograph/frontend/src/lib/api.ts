@@ -188,8 +188,17 @@ export const galleryApi = {
       body: formData,
     }),
 
+  update: (id: string, data: Partial<GalleryImage>) =>
+    request<ApiResponse<GalleryImage>>(`/admin/gallery/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
   delete: (id: string) =>
     request<ApiResponse<null>>(`/admin/gallery/${id}`, { method: 'DELETE' }),
+
+  // Download URL (used as href, not fetch)
+  downloadUrl: (id: string) => `${BASE_URL.replace('/api', '')}/api/gallery/${id}/download`,
 }
 
 // ── Music API ─────────────────────────────────────────────────────────────
@@ -212,6 +221,13 @@ export const musicApi = {
 
   delete: (id: string) =>
     request<ApiResponse<null>>(`/admin/music/${id}`, { method: 'DELETE' }),
+
+  // Download URL (used as href)
+  downloadUrl: (id: string) => `${BASE_URL.replace('/api', '')}/api/music/${id}/download`,
+
+  // Stream URL for audio player
+  streamUrl: (src: string) =>
+    src.startsWith('/uploads') ? `${BASE_URL.replace('/api', '')}${src}` : src,
 }
 
 // ── Video API ─────────────────────────────────────────────────────────────
@@ -234,6 +250,13 @@ export const videoApi = {
 
   delete: (id: string) =>
     request<ApiResponse<null>>(`/admin/videos/${id}`, { method: 'DELETE' }),
+
+  // Download URL (for non-YouTube videos)
+  downloadUrl: (id: string) => `${BASE_URL.replace('/api', '')}/api/videos/${id}/download`,
+
+  // Stream URL for video player
+  streamUrl: (src: string) =>
+    src.startsWith('/uploads') ? `${BASE_URL.replace('/api', '')}${src}` : src,
 }
 
 // ── Stats API ─────────────────────────────────────────────────────────────

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { ZoomIn, X, Download, RefreshCw } from 'lucide-react'
 import { GALLERY_CATEGORIES } from '@/data/siteData'
 import { galleryApi, type GalleryImage } from '@/lib/api'
@@ -118,32 +117,30 @@ export default function GalleryPage() {
               <AnimateIn key={img._id} delay={Math.min(i * 40, 400)} direction="up">
                 <button
                   onClick={() => setLightbox(img)}
-                  className="relative gallery-item w-full aspect-square rounded-xl group overflow-hidden bg-gray-100 dark:bg-dark-card border border-gray-100 dark:border-dark-border"
+                  className="relative w-full rounded-xl group overflow-hidden bg-gray-100 dark:bg-dark-card border border-gray-100 dark:border-dark-border block"
                   aria-label={`View ${img.title}`}
                 >
-                  <Image
-                    src={imageUrl(img)}
-                    alt={img.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                  <div className="gallery-overlay rounded-xl" />
-                  {/* Zoom icon */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-                      <ZoomIn className="w-5 h-5 text-gold" />
+                  {/* Square aspect-ratio wrapper */}
+                  <div style={{ paddingTop: '100%', position: 'relative' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imageUrl(img)}
+                      alt={img.title}
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                      className="group-hover:scale-110"
+                    />
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0)', transition: 'background 0.3s' }} className="group-hover:bg-black/30" />
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.3s' }} className="group-hover:opacity-100">
+                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                        <ZoomIn className="w-5 h-5 text-gold" />
+                      </div>
                     </div>
-                  </div>
-                  {/* Category badge */}
-                  <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="bg-gold/90 text-white text-xs font-inter font-semibold px-2 py-0.5 rounded-full capitalize">
-                      {img.category}
-                    </span>
-                  </div>
-                  {/* Title */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="font-inter text-xs text-white font-medium truncate">{img.title}</p>
+                    <div style={{ position: 'absolute', top: 8, left: 8, opacity: 0, transition: 'opacity 0.3s' }} className="group-hover:opacity-100">
+                      <span className="bg-gold/90 text-white text-xs font-inter font-semibold px-2 py-0.5 rounded-full capitalize">{img.category}</span>
+                    </div>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '8px', background: 'linear-gradient(to top, rgba(0,0,0,0.65), transparent)', opacity: 0, transition: 'opacity 0.3s' }} className="group-hover:opacity-100">
+                      <p className="font-inter text-xs text-white font-medium truncate">{img.title}</p>
+                    </div>
                   </div>
                 </button>
               </AnimateIn>
@@ -183,16 +180,12 @@ export default function GalleryPage() {
             className="relative max-w-5xl max-h-[88vh] w-full flex items-center justify-center"
             onClick={e => e.stopPropagation()}
           >
-            <div className="relative w-full" style={{ maxHeight: '80vh' }}>
-              <Image
-                src={imageUrl(lightbox)}
-                alt={lightbox.title}
-                width={1200}
-                height={800}
-                className="object-contain rounded-xl mx-auto"
-                style={{ maxHeight: '80vh', width: 'auto' }}
-              />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageUrl(lightbox)}
+              alt={lightbox.title}
+              style={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'contain', borderRadius: '12px' }}
+            />
           </div>
 
           {/* Caption */}

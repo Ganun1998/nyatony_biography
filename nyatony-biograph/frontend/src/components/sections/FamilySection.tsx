@@ -4,22 +4,6 @@ import { FAMILY_MEMBERS } from '@/data/siteData'
 import SectionHeading from '@/components/ui/SectionHeading'
 import AnimateIn from '@/components/ui/AnimateIn'
 
-// Avatar emoji based on descriptor word
-function getAvatar(descriptor: string) {
-  switch (descriptor) {
-    case 'Independent':
-    case 'Wisdom':   return '👵'
-    case 'Pillar':
-    case 'Educated': return '👩'
-    case 'Protector':
-    case 'Anchor':
-    case 'Respectful':
-    case 'Strength':
-    case 'Patient':  return '👨'
-    case 'Golden':   return '⭐'
-    default:         return '🧑'
-  }
-}
 
 export default function FamilySection() {
   // Show only the first 3 members on the homepage
@@ -40,13 +24,6 @@ export default function FamilySection() {
             <AnimateIn key={member.id} delay={i * 100} direction="up">
               <div className="card group hover:-translate-y-2 transition-transform duration-300 p-7 text-center h-full flex flex-col">
 
-                {/* Avatar circle */}
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-3xl border-2 border-gold/30 mx-auto mb-4"
-                  style={{ backgroundColor: '#F7E7E7' }}
-                >
-                  {getAvatar(member.descriptor)}
-                </div>
 
                 {/* Name */}
                 <h3 className="font-playfair text-lg font-bold text-text dark:text-white mb-0.5">

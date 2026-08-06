@@ -31,7 +31,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <h3 className="font-playfair text-2xl font-bold mb-2">Nyatony Kai Chuol Tut</h3>
+            <h3 className="font-playfair text-2xl font-bold mb-2">Nyatony Kai Chuol</h3>
             <div className="w-16 h-0.5 mb-4" style={{ backgroundColor: '#C9A227' }} />
             <p className="font-inter text-gray-400 text-sm leading-relaxed mb-6">
               A biography, graduation portfolio, and wedding tribute — preserving the story of faith,
@@ -88,7 +88,7 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="container-wide px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="font-inter text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} Nyatony Kai Chuol Tut. All rights reserved.
+            &copy; {new Date().getFullYear()} Nyatony Kai Chuol. All rights reserved.
           </p>
           <p className="font-inter text-xs text-gray-500 flex items-center gap-1">
             Made with <Heart className="w-3 h-3 text-gold" style={{ fill: '#C9A227' }} /> for a remarkable woman

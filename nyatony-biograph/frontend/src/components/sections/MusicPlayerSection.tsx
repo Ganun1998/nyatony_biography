@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Music, List, X } from 'lucide-react'
+import Link from 'next/link'
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Music, List, X, ArrowRight } from 'lucide-react'
 import { musicApi, videoApi, type MusicTrack, type VideoItem } from '@/lib/api'
 import { MUSIC_PLAYLIST, FEATURED_VIDEOS } from '@/data/siteData'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -66,7 +67,6 @@ export default function MusicPlayerSection() {
       ? `${API_BASE}${current.src}`
       : current.src
     : ''
-
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -223,18 +223,33 @@ export default function MusicPlayerSection() {
               )}
 
               <audio ref={audioRef} src={audioSrc} preload="metadata" />
+
+              {/* View all music link */}
+              <div className="mt-5 pt-4 border-t border-gray-100 dark:border-dark-border text-center">
+                <Link href="/media"
+                  className="inline-flex items-center gap-2 font-inter text-sm font-semibold text-gold hover:text-gold-dark transition-colors border-b border-gold/30 hover:border-gold pb-0.5">
+                  View all {playlist.length} tracks <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
           </AnimateIn>
 
           {/* ── VIDEO GRID ── */}
           <AnimateIn direction="right">
             <div>
-              <div className="flex items-center gap-2 mb-6">
-                <span className="text-gold">🎬</span>
-                <h3 className="font-inter font-semibold text-text dark:text-white">
-                  Featured Videos
-                  {videos.length > 0 && <span className="text-gold text-xs ml-2">({videos.length} videos)</span>}
-                </h3>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-gold">🎬</span>
+                  <h3 className="font-inter font-semibold text-text dark:text-white">
+                    Featured Videos
+                    {videos.length > 0 && <span className="text-gold text-xs ml-2">({videos.length} videos)</span>}
+                  </h3>
+                </div>
+                {videos.length > 4 && (
+                  <Link href="/media?tab=videos" className="font-inter text-xs text-gold hover:underline font-semibold flex items-center gap-1">
+                    View all <ArrowRight className="w-3 h-3" />
+                  </Link>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {displayVideos.slice(0, 4).map((video) => (
@@ -297,6 +312,14 @@ export default function MusicPlayerSection() {
                     No videos yet. Upload from Admin Panel → Videos.
                   </div>
                 )}
+              </div>
+
+              {/* View all videos link */}
+              <div className="mt-5 text-center">
+                <Link href="/media?tab=videos"
+                  className="inline-flex items-center gap-2 font-inter text-sm font-semibold text-gold hover:text-gold-dark transition-colors border-b border-gold/30 hover:border-gold pb-0.5">
+                  View all videos <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </AnimateIn>

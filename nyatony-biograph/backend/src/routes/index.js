@@ -56,6 +56,7 @@ admin.patch('/contact/:id/read',        contactCtrl.markRead)
 // Gallery CRUD
 admin.get('/gallery',                   galleryCtrl.getImages)
 admin.post('/gallery',                  uploadImage.single('image'),  galleryCtrl.uploadImage)
+admin.put('/gallery/:id',                                             galleryCtrl.updateImage)
 admin.delete('/gallery/:id',            galleryCtrl.deleteImage)
 
 // Music CRUD (field name: 'audio')

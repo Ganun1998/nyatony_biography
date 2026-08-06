@@ -30,15 +30,12 @@ export default function ContactSection() {
             <div className="space-y-8">
               <div>
                 <h3 className="font-playfair text-2xl font-bold text-text dark:text-white mb-4">Let&apos;s Connect</h3>
-                <p className="font-inter text-text-muted dark:text-gray-400 leading-relaxed">
-                  Whether you want to share memories, ask a question, or simply send a blessing &mdash; every message is read and appreciated with gratitude.
-                </p>
               </div>
               <div className="space-y-4">
                 {[
                   { icon: <Mail className="w-5 h-5" />, label: 'Email', value: SITE_META.email, href: `mailto:${SITE_META.email}` },
                   { icon: <Phone className="w-5 h-5" />, label: 'Phone', value: SITE_META.phone, href: `tel:${SITE_META.phone}` },
-                  { icon: <MapPin className="w-5 h-5" />, label: 'Location', value: 'Juba, South Sudan', href: '#' },
+                  { icon: <MapPin className="w-5 h-5" />, label: 'Location', value: 'Addis Ababa, Ethiopia', href: '#' },
                 ].map((item) => (
                   <a key={item.label} href={item.href}
                     className="flex items-center gap-4 p-4 rounded-2xl bg-background-secondary dark:bg-dark-card hover:border-gold/30 border border-transparent hover:shadow-card transition-all group">

@@ -3,15 +3,15 @@
 // ============================================================
 
 export const SITE_META = {
-  name: 'Nyatony Kai Chuol Tut',
+  name: 'Nyatony Kai Chuol',
   tagline: 'A Journey of Faith, Education, Perseverance, and Love.',
   weddingDate: new Date('2026-12-20T14:00:00'),
   graduationDate: new Date('2026-07-15'),
   university: 'New Generation College, Addis Ababa',
   degree: 'Bachelor of Arts in Global Studies',
   hometown: 'Wan, Ayod, South Sudan',
-  email: 'nyatony@example.com',
-  phone: '+211 000 000 000',
+  email: 'nyatonykai@gmail.com',
+  phone: '+251907564922',
   social: {
     facebook: '#',
     instagram: '#',
@@ -188,7 +188,7 @@ export const FAMILY_MEMBERS = [
     name: 'Galam Kai Chuol Tut',
     relationship: 'Family Member',
     descriptor: 'Golden',
-    portrait: '/images/family/galam.jpg',
+    portrait: '/images/nyatony-portrait.jpg',
     message:
       'Golden — because she is precious, exceptional, and a source of pride, joy, and inspiration to the family and everyone who knows her. My sincere congratulations on your graduation and wedding. I wish you a successful career, a happy and lasting marriage, and a life filled with God\'s blessings.',
   },
@@ -284,20 +284,18 @@ export const GRADUATION_DATA = {
 // WEDDING DATA — Real Details
 // ============================================================
 export const WEDDING_DATA = {
-  brideFullName: 'Nyatony Kai Chuol Tut',
-  groomFullName: 'To Be Announced',
-  ceremonyDate: 'December 20, 2026',
-  ceremonyTime: '2:00 PM',
-  ceremonyVenue: 'Family Compound, Juba, South Sudan',
-  receptionVenue: 'Juba Grand Hall',
+  brideFullName: 'Nyatony Kai Chuol',
+  groomFullName: 'Wutnuer Biel Nyak',
+  ceremonyDate: 'July 26, 2026',
+  ceremonyTime: '1:00 PM',
+  ceremonyVenue: 'Presbyterian Church of Ethiopia, Gambella',
+  receptionVenue: 'Baro Gambella Hotel',
   loveStory:
     'Nyatony\'s journey has always been one of patience and purpose. Through years of study, perseverance, and faith — she waited for the right time, the right person, and the right chapter. Now, as she stands at the threshold of a new beginning, love has found her exactly where she is: confident, educated, and ready.',
   schedule: [
-    { time: '10:00 AM', event: 'Traditional Ceremony', location: 'Family Compound', icon: '🌿' },
-    { time: '2:00 PM', event: 'Wedding Ceremony', location: 'Main Venue', icon: '💍' },
-    { time: '4:00 PM', event: 'Photo Session', location: 'Gardens', icon: '📸' },
-    { time: '6:00 PM', event: 'Reception & Dinner', location: 'Juba Grand Hall', icon: '🍽️' },
-    { time: '8:00 PM', event: 'First Dance', location: 'Reception Hall', icon: '💃' },
+    { time: '1:00 PM', event: 'Wedding Ceremony', location: 'Main Venue', icon: '💍' },
+    { time: '6:00 PM', event: 'Reception & Dinner', location: 'Baro Gambella Hotel Hall', icon: '🍽️' },
+    { time: '7:00 PM', event: 'First Dance', location: 'Reception Hall', icon: '💃' },
     { time: '9:00 PM', event: 'Family Dances & Celebration', location: 'Reception Hall', icon: '🎉' },
   ],
 }
@@ -305,108 +303,13 @@ export const WEDDING_DATA = {
 // ============================================================
 // MUSIC PLAYLIST
 // ============================================================
-export const MUSIC_PLAYLIST = [
-  {
-    id: 1,
-    title: 'A Thousand Years',
-    artist: 'Christina Perri',
-    category: 'Romantic',
-    artwork: '/images/music/a-thousand-years.jpg',
-    src: '/music/a-thousand-years.mp3',
-    duration: '4:45',
-  },
-  {
-    id: 2,
-    title: 'God Gave Me You',
-    artist: 'Blake Shelton',
-    category: 'Christian Wedding',
-    artwork: '/images/music/god-gave-me-you.jpg',
-    src: '/music/god-gave-me-you.mp3',
-    duration: '3:58',
-  },
-  {
-    id: 3,
-    title: "Can't Help Falling in Love",
-    artist: 'Elvis Presley',
-    category: 'Classic',
-    artwork: '/images/music/cant-help.jpg',
-    src: '/music/cant-help-falling.mp3',
-    duration: '3:00',
-  },
-  {
-    id: 4,
-    title: 'Perfect',
-    artist: 'Ed Sheeran',
-    category: 'Romantic',
-    artwork: '/images/music/perfect.jpg',
-    src: '/music/perfect.mp3',
-    duration: '4:23',
-  },
-  {
-    id: 5,
-    title: 'Beauty and the Beast',
-    artist: 'Celine Dion & Peabo Bryson',
-    category: 'Classic',
-    artwork: '/images/music/beauty.jpg',
-    src: '/music/beauty-and-the-beast.mp3',
-    duration: '4:03',
-  },
-  {
-    id: 6,
-    title: 'Blessing',
-    artist: 'Instrumental',
-    category: 'Instrumental',
-    artwork: '/images/music/blessing.jpg',
-    src: '/music/blessing.mp3',
-    duration: '3:30',
-  },
-]
+export const MUSIC_PLAYLIST: any[] = [];
 
 // ============================================================
 // VIDEOS
 // ============================================================
-export const FEATURED_VIDEOS = [
-  {
-    id: 1,
-    title: 'Graduation Highlights',
-    description: 'Celebrating the milestone of a lifetime',
-    thumbnail: '/images/videos/graduation-thumb.jpg',
-    youtubeId: '',
-    src: '/videos/graduation.mp4',
-    duration: '3:45',
-    category: 'Graduation',
-  },
-  {
-    id: 2,
-    title: 'Family Memories',
-    description: 'A lifetime of love and togetherness',
-    thumbnail: '/images/videos/family-thumb.jpg',
-    youtubeId: '',
-    src: '/videos/family.mp4',
-    duration: '5:12',
-    category: 'Family',
-  },
-  {
-    id: 3,
-    title: 'Engagement Story',
-    description: 'The beginning of forever',
-    thumbnail: '/images/videos/engagement-thumb.jpg',
-    youtubeId: '',
-    src: '/videos/engagement.mp4',
-    duration: '4:00',
-    category: 'Wedding',
-  },
-  {
-    id: 4,
-    title: 'Wedding Preparation',
-    description: 'Behind the scenes of a beautiful day',
-    thumbnail: '/images/videos/prep-thumb.jpg',
-    youtubeId: '',
-    src: '/videos/preparation.mp4',
-    duration: '6:30',
-    category: 'Wedding',
-  },
-]
+
+export const FEATURED_VIDEOS: any[] = [];
 
 // ============================================================
 // GALLERY

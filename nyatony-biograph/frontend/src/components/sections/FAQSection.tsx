@@ -8,7 +8,7 @@ import AnimateIn from '@/components/ui/AnimateIn'
 import { cn } from '@/lib/utils'
 
 export default function FAQSection() {
-  const [openId, setOpenId] = useState<number | null>(1)
+  const [openId, setOpenId] = useState<number | null>(null)
 
   return (
     <section className="section bg-background dark:bg-dark-bg" id="faq">

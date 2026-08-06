@@ -54,6 +54,20 @@ exports.downloadImage = async (req, res) => {
   }
 }
 
+// PUT /api/admin/gallery/:id — update title/description/category
+exports.updateImage = async (req, res) => {
+  try {
+    const allowed = ['title', 'description', 'category', 'tags', 'isPublished', 'order']
+    const updates = {}
+    allowed.forEach(k => { if (req.body[k] !== undefined) updates[k] = req.body[k] })
+    const image = await Gallery.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true })
+    if (!image) return res.status(404).json({ success: false, message: 'Image not found.' })
+    res.json({ success: true, data: image })
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message })
+  }
+}
+
 // DELETE /api/admin/gallery/:id
 exports.deleteImage = async (req, res) => {
   try {

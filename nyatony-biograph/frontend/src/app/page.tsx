@@ -11,8 +11,8 @@ export default function HomePage() {
     <>
       <HeroSection />
       <BiographySection />
-      <MusicPlayerSection />
       <FamilySection />
+      <MusicPlayerSection />
       <GalleryPreview />
        <FAQSection />
     </>

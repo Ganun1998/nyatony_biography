@@ -337,14 +337,19 @@ function ContactPanel() {
 // GALLERY PANEL
 // ══════════════════════════════════════════════════════════════════════════
 function GalleryPanel() {
-  const [images, setImages] = useState<GalleryImage[]>([])
+  const [images, setImages]   = useState<GalleryImage[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [uploadPct, setUploadPct] = useState(0)
   const [category, setCategory] = useState('graduation')
   const [title, setTitle] = useState('')
+  const [editId, setEditId]   = useState<string | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editCat, setEditCat] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
   const { toast, show } = useToast()
+  const API = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
+  const CATS = ['childhood', 'graduation', 'wedding', 'family', 'other']
 
   const load = useCallback(() => {
     setLoading(true)
@@ -353,7 +358,6 @@ function GalleryPanel() {
       .catch(() => show('Failed to load gallery', 'error'))
       .finally(() => setLoading(false))
   }, [])
-
   useEffect(() => { load() }, [load])
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -366,30 +370,63 @@ function GalleryPanel() {
     fd.append('category', category)
     setUploading(true); setUploadPct(20)
     try {
-      setUploadPct(60)
+      setUploadPct(70)
       const res = await galleryApi.upload(fd)
       setImages(prev => [res.data, ...prev])
       setTitle(''); if (fileRef.current) fileRef.current.value = ''
       setUploadPct(100); show('Image uploaded!')
-    } catch (err: unknown) {
-      show(err instanceof Error ? err.message : 'Upload failed', 'error')
-    } finally { setTimeout(() => { setUploading(false); setUploadPct(0) }, 800) }
+    } catch (err: unknown) { show(err instanceof Error ? err.message : 'Upload failed', 'error') }
+    finally { setTimeout(() => { setUploading(false); setUploadPct(0) }, 800) }
+  }
+
+  const startEdit = (img: GalleryImage) => { setEditId(img._id); setEditTitle(img.title); setEditCat(img.category) }
+
+  const saveEdit = async () => {
+    if (!editId) return
+    try {
+      const res = await galleryApi.update(editId, { title: editTitle, category: editCat })
+      setImages(prev => prev.map(i => i._id === editId ? res.data : i))
+      setEditId(null); show('Image updated!')
+    } catch { show('Update failed', 'error') }
   }
 
   const del = async (id: string) => {
     if (!confirm('Delete this image?')) return
-    try {
-      await galleryApi.delete(id)
-      setImages(prev => prev.filter(i => i._id !== id))
-      show('Image deleted')
-    } catch { show('Delete failed', 'error') }
+    try { await galleryApi.delete(id); setImages(prev => prev.filter(i => i._id !== id)); show('Image deleted') }
+    catch { show('Delete failed', 'error') }
   }
-
-  const CATS = ['childhood', 'graduation', 'wedding', 'family', 'other']
 
   return (
     <div>
       {toast && <Toast msg={toast.msg} type={toast.type} />}
+
+      {/* Edit modal */}
+      {editId && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setEditId(null)}>
+          <div className="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="font-playfair text-lg font-bold text-text dark:text-white mb-4">Edit Photo</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="font-inter text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 block">Title</label>
+                <input value={editTitle} onChange={e => setEditTitle(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-dark-border bg-background-secondary dark:bg-dark-bg font-inter text-sm focus:outline-none focus:border-gold transition-colors" />
+              </div>
+              <div>
+                <label className="font-inter text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 block">Category</label>
+                <select value={editCat} onChange={e => setEditCat(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-dark-border bg-background-secondary dark:bg-dark-bg font-inter text-sm focus:outline-none focus:border-gold transition-colors capitalize">
+                  {CATS.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button onClick={saveEdit} className="btn-primary flex-1 justify-center text-sm"><Check className="w-4 h-4" /> Save</button>
+              <button onClick={() => setEditId(null)} className="btn-secondary flex-1 justify-center text-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Upload form */}
       <form onSubmit={handleUpload} className="card p-6 mb-6">
         <h3 className="font-playfair text-lg font-bold text-text dark:text-white mb-4 flex items-center gap-2">
@@ -411,7 +448,7 @@ function GalleryPanel() {
           <div>
             <label className="font-inter text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 block">Image File</label>
             <input ref={fileRef} type="file" accept="image/*" required
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-background-secondary dark:bg-dark-bg font-inter text-sm focus:outline-none focus:border-gold transition-colors file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-gold/10 file:text-gold" />
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-dark-border bg-background-secondary dark:bg-dark-bg font-inter text-sm file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-gold/10 file:text-gold" />
           </div>
         </div>
         {uploading && <div className="mb-3"><UploadProgress pct={uploadPct} /></div>}
@@ -424,16 +461,36 @@ function GalleryPanel() {
       {loading ? <div className="flex justify-center py-16"><Spinner /></div> : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {images.map(img => (
-            <div key={img._id} className="group relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-card border border-gray-100 dark:border-dark-border">
-              <img src={`http://localhost:5000${img.imageUrl}`} alt={img.title}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
-                <span className="bg-gold/90 text-white text-xs font-inter font-semibold px-2 py-0.5 rounded-full self-start capitalize">{img.category}</span>
-                <div>
-                  <p className="font-inter text-xs text-white truncate mb-2">{img.title}</p>
-                  <button onClick={() => del(img._id)} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-500/90 text-white text-xs font-semibold hover:bg-red-600 transition-colors">
-                    <Trash2 className="w-3 h-3" /> Delete
-                  </button>
+            <div key={img._id} className="group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-card border border-gray-100 dark:border-dark-border">
+              <div style={{ paddingTop: '100%', position: 'relative' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`${API}${img.imageUrl}`} alt={img.title}
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }}
+                  className="group-hover:scale-105" />
+                {/* Actions overlay */}
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', opacity: 0, transition: 'opacity 0.3s', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px' }} className="group-hover:opacity-100">
+                  <div className="flex justify-between items-start">
+                    <span className="bg-gold/90 text-white text-[10px] font-inter font-semibold px-2 py-0.5 rounded-full capitalize">{img.category}</span>
+                    <div className="flex gap-1">
+                      {/* Download */}
+                      <a href={galleryApi.downloadUrl(img._id)} download
+                        className="w-7 h-7 rounded-lg bg-white/20 hover:bg-blue-500 flex items-center justify-center text-white transition-colors" title="Download"
+                        onClick={e => e.stopPropagation()}>
+                        <Download className="w-3.5 h-3.5" />
+                      </a>
+                      {/* Edit */}
+                      <button onClick={() => startEdit(img)}
+                        className="w-7 h-7 rounded-lg bg-white/20 hover:bg-gold flex items-center justify-center text-white transition-colors" title="Edit">
+                        <RefreshCw className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-inter text-xs text-white truncate mb-2">{img.title}</p>
+                    <button onClick={() => del(img._id)} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-500/90 hover:bg-red-600 text-white text-xs font-semibold transition-colors">
+                      <Trash2 className="w-3 h-3" /> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -547,12 +604,20 @@ function MusicPanel() {
                 <p className="font-inter font-semibold text-text dark:text-white text-sm truncate">{t.title}</p>
                 <p className="font-inter text-xs text-text-muted">{t.artist} &bull; {t.category} &bull; {t.duration}</p>
               </div>
-              <audio controls className="h-8 hidden sm:block" style={{ width: '160px' }}>
-                <source src={`http://localhost:5000${t.src}`} />
+              {/* Inline audio preview */}
+              <audio controls className="h-8 hidden sm:block" style={{ width: '140px' }}>
+                <source src={musicApi.streamUrl(t.src)} />
               </audio>
-              <button onClick={() => del(t._id)} className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors flex-shrink-0">
-                <Trash2 className="w-4 h-4" />
-              </button>
+              {/* Action buttons */}
+              <div className="flex gap-1.5 flex-shrink-0">
+                <a href={musicApi.downloadUrl(t._id)} download
+                  className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-colors" title="Download">
+                  <Download className="w-3.5 h-3.5" />
+                </a>
+                <button onClick={() => del(t._id)} className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-colors" title="Delete">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           ))}
           {tracks.length === 0 && <div className="text-center py-16 text-text-muted font-inter">No music tracks yet.</div>}
@@ -712,9 +777,24 @@ function VideoPanel() {
               <div className="p-4">
                 <p className="font-inter font-semibold text-text dark:text-white text-sm mb-1 truncate">{v.title}</p>
                 <p className="font-inter text-xs text-text-muted mb-3">{v.category} {v.duration && `• ${v.duration}`}</p>
-                <button onClick={() => del(v._id)} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 text-xs font-semibold transition-colors">
-                  <Trash2 className="w-3.5 h-3.5" /> Delete
-                </button>
+                <div className="flex gap-2">
+                  {/* Download (only for uploaded files, not YouTube) */}
+                  {v.src && !v.youtubeId && (
+                    <a href={videoApi.downloadUrl(v._id)} download
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold transition-colors">
+                      <Download className="w-3.5 h-3.5" /> Download
+                    </a>
+                  )}
+                  {v.youtubeId && (
+                    <a href={`https://youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold transition-colors">
+                      <ExternalLink className="w-3.5 h-3.5" /> YouTube
+                    </a>
+                  )}
+                  <button onClick={() => del(v._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 text-xs font-semibold transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
