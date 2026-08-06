@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   LayoutDashboard, BookOpen, Image as ImageIcon, Video, Music,
   MessageSquare, Users, HelpCircle, GraduationCap, Heart,
-  Settings, LogOut, Bell, TrendingUp, Upload, Trash2,
+  Settings, LogOut, Bell, TrendingUp, Upload, Trash2, Download,
   Check, X, Eye, RefreshCw, Plus, ExternalLink
 } from 'lucide-react'
 import {
