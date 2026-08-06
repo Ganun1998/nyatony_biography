@@ -83,7 +83,7 @@ export default function WeddingPage() {
             {/* Couple photo */}
             <div className="relative aspect-square rounded-3xl overflow-hidden shadow-gold-lg border-4 border-gold/20">
               <WeddingImage
-                src="/images/wedding/couple.jpg"
+                src="/images/wedding1.jpg"
                 alt={`${WEDDING_DATA.brideFullName} and ${WEDDING_DATA.groomFullName}`}
                 className="hover:scale-105 transition-transform duration-700"
               />

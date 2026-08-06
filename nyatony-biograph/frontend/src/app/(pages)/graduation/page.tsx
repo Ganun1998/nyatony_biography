@@ -44,7 +44,7 @@ export default function GraduationPage() {
             {/* Hero profile image or icon */}
             <div className="relative w-24 h-24 mx-auto rounded-full overflow-hidden border-4 border-gold/30 shadow-gold-lg mb-6">
               <GradImage
-                src="/images/graduation/graduation-profile.jpg"
+                src="/images/graduation.jpg"
                 alt="Nyatony Graduation"
                 className="transition-transform duration-700 hover:scale-110"
               />
@@ -88,7 +88,7 @@ export default function GraduationPage() {
             {/* Main graduation image */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-gold-lg border-4 border-gold/20">
               <GradImage
-                src="/images/graduation/graduation-main.jpg"
+                src="/images/graduation.jpg"
                 alt="Nyatony Graduation Ceremony"
                 className="hover:scale-105 transition-transform duration-700"
               />
