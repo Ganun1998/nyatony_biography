@@ -54,29 +54,6 @@ export default function WeddingPage() {
 
       <div className="container-wide px-4 sm:px-6 lg:px-8">
 
-        {/* Countdown */}
-        <AnimateIn direction="up">
-          <div className="bg-text dark:bg-dark-surface rounded-3xl p-8 mb-16 relative overflow-hidden">
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.1) 0%, transparent 100%)' }} />
-            <div className="relative z-10">
-              <p className="font-inter text-center text-white/60 text-sm uppercase tracking-widest mb-6">Wedding Countdown</p>
-              <div className="grid grid-cols-4 gap-4 max-w-lg mx-auto">
-                {[
-                  { value: timeLeft.days, label: 'Days' },
-                  { value: timeLeft.hours, label: 'Hours' },
-                  { value: timeLeft.minutes, label: 'Mins' },
-                  { value: timeLeft.seconds, label: 'Secs' },
-                ].map((u) => (
-                  <div key={u.label} className="rounded-2xl p-5 text-center border border-white/20" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                    <div className="font-playfair text-5xl font-bold text-gold leading-none mb-1">{String(u.value).padStart(2, '0')}</div>
-                    <div className="font-inter text-xs uppercase tracking-widest text-white/60">{u.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </AnimateIn>
-
         {/* Love story */}
         <div className="grid lg:grid-cols-2 gap-12 mb-16">
           <AnimateIn direction="left">
