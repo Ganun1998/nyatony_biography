@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit')
 const path    = require('path')
 
 const { connectDB, dbReady } = require('./config/database')
+const cleanStaleRecords      = require('./config/cleanup')
 const routes = require('./routes/index')
 
 const app = express()
@@ -43,8 +44,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 // ── Dev logging ───────────────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'))
 
-// ── Static uploads ────────────────────────────────────────────────────────
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+// ── Static file serving for uploaded media ───────────────────────────────
+// __dirname = backend/src — uploads folder is at backend/uploads (one level up)
+const uploadsPath = path.join(__dirname, '..', 'uploads')
+app.use('/uploads', express.static(uploadsPath, {
+  setHeaders: (res) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+    res.set('Cache-Control', 'public, max-age=86400')
+  }
+}))
 
 // ── DB-ready middleware ───────────────────────────────────────────────────
 // Routes that need the DB show a clear error if DB is not yet connected
@@ -99,5 +107,10 @@ app.listen(PORT, () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 })
 
-// ── Connect to MongoDB Atlas (non-blocking) ───────────────────────────────
-connectDB()
+// ── Connect to MongoDB Atlas then clean stale records ────────────────────
+connectDB().then(async () => {
+  if (dbReady()) {
+    console.log('🧹 Checking for stale upload records...')
+    await cleanStaleRecords()
+  }
+})

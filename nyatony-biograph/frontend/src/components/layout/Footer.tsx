@@ -7,6 +7,7 @@ const FOOTER_LINKS = {
     { href: '/biography', label: 'Full Biography' },
     { href: '/graduation', label: 'Graduation' },
     { href: '/wedding', label: 'Wedding' },
+    { href: '/media', label: 'Music & Videos' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/contact', label: 'Contact' },
   ],

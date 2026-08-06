@@ -146,13 +146,23 @@ function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
 // MEDIA PAGE
 // ══════════════════════════════════════════════════════════════════════════
 export default function MediaPage() {
+  const searchParams  = useSearchParams()
   const [tracks, setTracks]         = useState<MusicTrack[]>([])
   const [videos, setVideos]         = useState<VideoItem[]>([])
   const [loading, setLoading]       = useState(true)
-  const [activeTab, setActiveTab]   = useState<'music' | 'videos'>('music')
+  const [activeTab, setActiveTab]   = useState<'music' | 'videos'>(() => {
+    // Will be overridden after mount via searchParams
+    return 'music'
+  })
   const [playingVideo, setPlayingVideo] = useState<VideoItem | null>(null)
   const [currentTrack, setCurrentTrack] = useState(0)
   const [showPlaylist, setShowPlaylist] = useState(true)
+
+  // Set initial tab from URL query param
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab === 'videos') setActiveTab('videos')
+  }, [searchParams])
   
 useEffect(() => {
   Promise.all([
