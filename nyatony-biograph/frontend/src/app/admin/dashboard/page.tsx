@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   LayoutDashboard, BookOpen, Image as ImageIcon, Video, Music,
   MessageSquare, Users, HelpCircle, GraduationCap, Heart,
-  Settings, LogOut, Bell, TrendingUp, Upload, Trash2, Download,
+  Settings, LogOut, Bell, TrendingUp, Upload, Trash2,
   Check, X, Eye, RefreshCw, Plus, ExternalLink
 } from 'lucide-react'
 import {
@@ -476,7 +476,6 @@ function GalleryPanel() {
                       <a href={galleryApi.downloadUrl(img._id)} download
                         className="w-7 h-7 rounded-lg bg-white/20 hover:bg-blue-500 flex items-center justify-center text-white transition-colors" title="Download"
                         onClick={e => e.stopPropagation()}>
-                        <Download className="w-3.5 h-3.5" />
                       </a>
                       {/* Edit */}
                       <button onClick={() => startEdit(img)}
@@ -612,7 +611,6 @@ function MusicPanel() {
               <div className="flex gap-1.5 flex-shrink-0">
                 <a href={musicApi.downloadUrl(t._id)} download
                   className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-colors" title="Download">
-                  <Download className="w-3.5 h-3.5" />
                 </a>
                 <button onClick={() => del(t._id)} className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-colors" title="Delete">
                   <Trash2 className="w-3.5 h-3.5" />
@@ -781,8 +779,7 @@ function VideoPanel() {
                   {/* Download (only for uploaded files, not YouTube) */}
                   {v.src && !v.youtubeId && (
                     <a href={videoApi.downloadUrl(v._id)} download
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold transition-colors">
-                      <Download className="w-3.5 h-3.5" /> Download
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold transition-colors"> Download
                     </a>
                   )}
                   {v.youtubeId && (
