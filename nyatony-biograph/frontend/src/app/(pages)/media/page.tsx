@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import {
@@ -9,12 +9,11 @@ import {
 } from 'lucide-react'
 import { musicApi, videoApi, type MusicTrack, type VideoItem } from '@/lib/api'
 import AnimateIn from '@/components/ui/AnimateIn'
-import SectionHeading from '@/components/ui/SectionHeading'
 import { cn } from '@/lib/utils'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
 
-// ── Helpers ────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function resolveAudioSrc(src: string) {
   return src.startsWith('/uploads') ? `${API_BASE}${src}` : src
 }
@@ -31,7 +30,7 @@ function resolveVideoSrc(v: VideoItem) {
   return v.src || ''
 }
 
-// ── Mini music player ────────────────────────────────────────────────────
+// â”€â”€ Mini music player â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [playing, setPlaying]           = useState(false)
@@ -39,7 +38,6 @@ function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const [volume, setVolume]             = useState(0.8)
   const [muted, setMuted]               = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
-
   const current = tracks[currentIndex]
 
   useEffect(() => {
@@ -81,12 +79,12 @@ function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
 
   return (
     <div className="music-player sticky top-24 z-10">
-      {/* Current track info */}
       <div className="flex gap-4 mb-5">
         <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 shadow-gold" style={{ backgroundColor: '#F7E7E7' }}>
           {current.artwork
-            ? <img src={current.artwork.startsWith('/uploads') ? `${API_BASE}${current.artwork}` : current.artwork} alt={current.title} className="w-full h-full object-cover rounded-2xl" /> // eslint-disable-line
-            : '🎵'}
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={current.artwork.startsWith('/uploads') ? `${API_BASE}${current.artwork}` : current.artwork} alt={current.title} className="w-full h-full object-cover rounded-2xl" />
+            : 'ðŸŽµ'}
         </div>
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <p className="font-inter text-xs uppercase tracking-widest text-gold mb-0.5">{current.category}</p>
@@ -99,13 +97,9 @@ function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
           <Download className="w-4 h-4" />
         </a>
       </div>
-
-      {/* Progress */}
       <div className="progress-bar mb-4 cursor-pointer" onClick={seek}>
         <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
-
-      {/* Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => { setCurrentIndex((currentIndex - 1 + tracks.length) % tracks.length); setPlaying(false); setProgress(0) }}
@@ -131,60 +125,39 @@ function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
             className="w-16 h-1 cursor-pointer" style={{ accentColor: '#C9A227' }} />
         </div>
       </div>
-
       <audio ref={audioRef} src={resolveAudioSrc(current.src)} preload="metadata" />
-
-      {/* Track count */}
-      <p className="font-inter text-xs text-text-muted text-center mt-4">
-        Track {currentIndex + 1} of {tracks.length}
-      </p>
+      <p className="font-inter text-xs text-text-muted text-center mt-4">Track {currentIndex + 1} of {tracks.length}</p>
     </div>
   )
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-// MEDIA PAGE
-// ══════════════════════════════════════════════════════════════════════════
-export default function MediaPage() {
-  const searchParams  = useSearchParams()
-  const [tracks, setTracks]         = useState<MusicTrack[]>([])
-  const [videos, setVideos]         = useState<VideoItem[]>([])
-  const [loading, setLoading]       = useState(true)
-  const [activeTab, setActiveTab]   = useState<'music' | 'videos'>(() => {
-    // Will be overridden after mount via searchParams
-    return 'music'
-  })
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// INNER CONTENT â€” uses useSearchParams, must be inside Suspense
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function MediaContent() {
+  const searchParams = useSearchParams()
+  const [tracks, setTracks]           = useState<MusicTrack[]>([])
+  const [videos, setVideos]           = useState<VideoItem[]>([])
+  const [loading, setLoading]         = useState(true)
+  const [activeTab, setActiveTab]     = useState<'music' | 'videos'>('music')
   const [playingVideo, setPlayingVideo] = useState<VideoItem | null>(null)
   const [currentTrack, setCurrentTrack] = useState(0)
   const [showPlaylist, setShowPlaylist] = useState(true)
 
-  // Set initial tab from URL query param
+  // Read ?tab=videos from URL
   useEffect(() => {
-    const tab = searchParams.get('tab')
-    if (tab === 'videos') setActiveTab('videos')
+    if (searchParams.get('tab') === 'videos') setActiveTab('videos')
   }, [searchParams])
-  
-useEffect(() => {
-  Promise.all([
-    musicApi.getAll().then((r) => {
-      setTracks(r.data);
-    }),
 
-    videoApi.getAll().then((r) => {
-      setVideos(r.data);
-    }),
-  ])
-    .catch((err) => {
-      console.error("Failed to load media:", err);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-}, []);
+  useEffect(() => {
+    Promise.all([
+      musicApi.getAll().then(r => setTracks(r.data)),
+      videoApi.getAll().then(r => setVideos(r.data)),
+    ]).catch(() => {}).finally(() => setLoading(false))
+  }, [])
 
   return (
     <div className="pt-24 pb-20 bg-background dark:bg-dark-bg min-h-screen">
-
       {/* Header */}
       <div className="relative py-16 px-4 mb-12 overflow-hidden text-center" style={{ background: 'linear-gradient(135deg, #1F2937 0%, #374151 100%)' }}>
         <div className="absolute inset-0 bg-pattern opacity-5" />
@@ -192,17 +165,13 @@ useEffect(() => {
         <div className="container-narrow relative z-10">
           <AnimateIn direction="up">
             <p className="font-inter text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-2">Multimedia</p>
-            <h1 className="heading-xl text-white mb-3">Music & Videos</h1>
-            <p className="font-inter text-white/60 max-w-lg mx-auto">
-              All wedding songs, video memories, and multimedia content in one place.
-            </p>
+            <h1 className="heading-xl text-white mb-3">Music &amp; Videos</h1>
+            <p className="font-inter text-white/60 max-w-lg mx-auto">All wedding songs, video memories, and multimedia content in one place.</p>
           </AnimateIn>
         </div>
       </div>
 
       <div className="container-wide px-4 sm:px-6 lg:px-8">
-
-        {/* Back link */}
         <AnimateIn direction="up">
           <Link href="/#music" className="inline-flex items-center gap-2 font-inter text-sm text-text-muted hover:text-gold transition-colors mb-8">
             <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -215,14 +184,12 @@ useEffect(() => {
             <button onClick={() => setActiveTab('music')}
               className={cn('flex items-center gap-2 px-6 py-2.5 rounded-full font-inter text-sm font-semibold transition-all',
                 activeTab === 'music' ? 'bg-gold text-white shadow-gold' : 'border border-gold/30 text-text dark:text-white hover:border-gold')}>
-              <Music className="w-4 h-4" /> Music
-              {tracks.length > 0 && <span className="opacity-60">({tracks.length})</span>}
+              <Music className="w-4 h-4" /> Music {tracks.length > 0 && <span className="opacity-60">({tracks.length})</span>}
             </button>
             <button onClick={() => setActiveTab('videos')}
               className={cn('flex items-center gap-2 px-6 py-2.5 rounded-full font-inter text-sm font-semibold transition-all',
                 activeTab === 'videos' ? 'bg-gold text-white shadow-gold' : 'border border-gold/30 text-text dark:text-white hover:border-gold')}>
-              <VideoIcon className="w-4 h-4" /> Videos
-              {videos.length > 0 && <span className="opacity-60">({videos.length})</span>}
+              <VideoIcon className="w-4 h-4" /> Videos {videos.length > 0 && <span className="opacity-60">({videos.length})</span>}
             </button>
           </div>
         </AnimateIn>
@@ -234,11 +201,9 @@ useEffect(() => {
           </div>
         ) : (
           <>
-            {/* ── MUSIC TAB ── */}
+            {/* â”€â”€ MUSIC TAB â”€â”€ */}
             {activeTab === 'music' && (
               <div className="grid lg:grid-cols-[1fr_340px] gap-10 items-start">
-
-                {/* Track list */}
                 <AnimateIn direction="left">
                   <div>
                     <div className="flex items-center justify-between mb-5">
@@ -250,37 +215,21 @@ useEffect(() => {
                         <List className="w-4 h-4" />
                       </button>
                     </div>
-
                     <div className="space-y-2">
                       {tracks.map((t, i) => (
                         <AnimateIn key={t._id} delay={i * 30} direction="up">
-                          <button
-                            onClick={() => setCurrentTrack(i)}
-                            className={cn(
-                              'w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all border',
-                              currentTrack === i
-                                ? 'bg-gold/8 border-gold/40'
-                                : 'border-gray-100 dark:border-dark-border hover:border-gold/20 hover:bg-gray-50 dark:hover:bg-dark-card'
-                            )}
-                          >
-                            {/* Number / playing indicator */}
-                            <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center font-playfair font-bold text-sm flex-shrink-0',
-                              currentTrack === i ? 'text-white' : 'text-gold')}
+                          <button onClick={() => setCurrentTrack(i)}
+                            className={cn('w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all border',
+                              currentTrack === i ? 'bg-gold/8 border-gold/40' : 'border-gray-100 dark:border-dark-border hover:border-gold/20 hover:bg-gray-50 dark:hover:bg-dark-card')}>
+                            <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center font-playfair font-bold text-sm flex-shrink-0', currentTrack === i ? 'text-white' : 'text-gold')}
                               style={{ backgroundColor: currentTrack === i ? '#C9A227' : 'rgba(201,162,39,0.1)' }}>
-                              {currentTrack === i ? '▶' : i + 1}
+                              {currentTrack === i ? 'â–¶' : i + 1}
                             </div>
-
-                            {/* Info */}
                             <div className="flex-1 min-w-0">
-                              <p className={cn('font-inter text-sm font-semibold truncate', currentTrack === i ? 'text-gold' : 'text-text dark:text-white')}>
-                                {t.title}
-                              </p>
+                              <p className={cn('font-inter text-sm font-semibold truncate', currentTrack === i ? 'text-gold' : 'text-text dark:text-white')}>{t.title}</p>
                               <p className="font-inter text-xs text-text-muted truncate">{t.artist} &bull; {t.category}</p>
                             </div>
-
                             <span className="font-inter text-xs text-text-light flex-shrink-0">{t.duration}</span>
-
-                            {/* Download */}
                             <a href={musicApi.downloadUrl(t._id)} download
                               className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:text-gold hover:bg-gold/10 transition-all flex-shrink-0"
                               title="Download" onClick={e => e.stopPropagation()}>
@@ -290,18 +239,15 @@ useEffect(() => {
                         </AnimateIn>
                       ))}
                     </div>
-
                     {tracks.length === 0 && (
                       <div className="text-center py-16">
-                        <div className="text-5xl mb-3">🎵</div>
+                        <div className="text-5xl mb-3">ðŸŽµ</div>
                         <p className="font-inter text-text-muted">No music uploaded yet.</p>
-                        <p className="font-inter text-xs text-text-light mt-1">Upload tracks from Admin Panel → Music</p>
+                        <p className="font-inter text-xs text-text-light mt-1">Upload from Admin Panel â†’ Music</p>
                       </div>
                     )}
                   </div>
                 </AnimateIn>
-
-                {/* Sticky player */}
                 {tracks.length > 0 && (
                   <AnimateIn direction="right">
                     <MusicPlayer tracks={tracks} key={tracks.map(t => t._id).join()} />
@@ -310,26 +256,24 @@ useEffect(() => {
               </div>
             )}
 
-            {/* ── VIDEOS TAB ── */}
+            {/* â”€â”€ VIDEOS TAB â”€â”€ */}
             {activeTab === 'videos' && (
               <AnimateIn direction="up">
                 <div>
                   <h2 className="font-playfair text-xl font-bold text-text dark:text-white mb-6">
                     All Videos <span className="text-gold text-base">({videos.length})</span>
                   </h2>
-
                   {videos.length === 0 ? (
                     <div className="text-center py-24">
-                      <div className="text-5xl mb-3">🎬</div>
+                      <div className="text-5xl mb-3">ðŸŽ¬</div>
                       <p className="font-inter text-text-muted">No videos uploaded yet.</p>
-                      <p className="font-inter text-xs text-text-light mt-1">Upload videos from Admin Panel → Videos</p>
+                      <p className="font-inter text-xs text-text-light mt-1">Upload from Admin Panel â†’ Videos</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                       {videos.map((video, i) => (
                         <AnimateIn key={video._id} delay={i * 50} direction="up">
                           <div className="card overflow-hidden group">
-                            {/* Thumbnail */}
                             <button onClick={() => setPlayingVideo(video)} className="w-full relative block">
                               <div style={{ paddingTop: '56.25%', position: 'relative', backgroundColor: '#F7E7E7' }}>
                                 {resolveVideoThumb(video) ? (
@@ -338,17 +282,14 @@ useEffect(() => {
                                     style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }}
                                     className="group-hover:scale-105" />
                                 ) : (
-                                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>🎬</div>
+                                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>ðŸŽ¬</div>
                                 )}
-                                {/* Dark overlay */}
                                 <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0)', transition: 'background 0.3s' }} className="group-hover:bg-black/20" />
-                                {/* Play button */}
                                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                   <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
                                     <Play className="w-6 h-6 text-gold ml-0.5" />
                                   </div>
                                 </div>
-                                {/* Duration */}
                                 {video.duration && (
                                   <div style={{ position: 'absolute', bottom: 8, right: 8 }} className="bg-black/70 text-white text-xs px-2 py-0.5 rounded font-inter">
                                     {video.duration}
@@ -356,8 +297,6 @@ useEffect(() => {
                                 )}
                               </div>
                             </button>
-
-                            {/* Info + actions */}
                             <div className="p-4">
                               <h3 className="font-playfair text-base font-bold text-text dark:text-white mb-0.5">{video.title}</h3>
                               {video.description && <p className="font-inter text-xs text-text-muted mb-3 line-clamp-2">{video.description}</p>}
@@ -392,22 +331,16 @@ useEffect(() => {
 
       {/* Video modal */}
       {playingVideo && (
-        <div className="fixed inset-0 z-[9999] bg-black/97 flex items-center justify-center p-4"
-          onClick={() => setPlayingVideo(null)}>
+        <div className="fixed inset-0 z-[9999] bg-black/97 flex items-center justify-center p-4" onClick={() => setPlayingVideo(null)}>
           <button onClick={() => setPlayingVideo(null)}
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
           <div className="w-full max-w-4xl" onClick={e => e.stopPropagation()}>
             {playingVideo.youtubeId ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${playingVideo.youtubeId}?autoplay=1`}
-                title={playingVideo.title}
-                className="w-full rounded-2xl"
-                style={{ aspectRatio: '16/9' }}
-                allow="autoplay; fullscreen"
-                allowFullScreen
-              />
+              <iframe src={`https://www.youtube.com/embed/${playingVideo.youtubeId}?autoplay=1`}
+                title={playingVideo.title} className="w-full rounded-2xl" style={{ aspectRatio: '16/9' }}
+                allow="autoplay; fullscreen" allowFullScreen />
             ) : playingVideo.src ? (
               <video controls autoPlay className="w-full rounded-2xl" style={{ aspectRatio: '16/9' }}>
                 <source src={resolveVideoSrc(playingVideo)} />
@@ -421,5 +354,23 @@ useEffect(() => {
         </div>
       )}
     </div>
+  )
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// PAGE EXPORT â€” wraps MediaContent in Suspense (required by Next.js 14)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+export default function MediaPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen pt-24 flex items-center justify-center bg-background dark:bg-dark-bg">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full animate-spin" style={{ border: '3px solid rgba(201,162,39,0.2)', borderTopColor: '#C9A227' }} />
+          <p className="font-inter text-sm text-text-muted">Loading...</p>
+        </div>
+      </div>
+    }>
+      <MediaContent />
+    </Suspense>
   )
 }
