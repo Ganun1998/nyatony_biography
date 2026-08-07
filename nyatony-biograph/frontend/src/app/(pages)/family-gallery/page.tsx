@@ -11,48 +11,17 @@ export const metadata: Metadata = {
     'Read the full heartfelt messages from every family member of Nyatony Kai Chuol Tut — their pride, love, and blessings.',
 }
 
-function getAvatar(descriptor: string) {
-  switch (descriptor) {
-    case 'Independent':
-    case 'Wisdom':   return '👵'
-    case 'Pillar':
-    case 'Educated': return '👩'
-    case 'Protector':
-    case 'Anchor':
-    case 'Respectful':
-    case 'Strength':
-    case 'Patient':  return '👨'
-    case 'Golden':   return '⭐'
-    default:         return '🧑'
-  }
-}
-
-// Questions answered by each family member
-const QUESTIONS = [
-  {
-    key: 'descriptor',
-    label: 'One word that describes Nyatony',
-    icon: '✨',
-  },
-]
-
-// Extended reflections per member (pulled directly from FAMILY_MEMBERS.message)
-// The message field in siteData already contains the full answer — we display it here in full.
-
 export default function FamilyGalleryPage() {
   return (
     <div className="pt-24 pb-20 bg-background dark:bg-dark-bg min-h-screen">
 
-      {/* ── Page header ── */}
+      {/* Page header */}
       <div
         className="relative py-20 px-4 mb-16 overflow-hidden text-center"
         style={{ background: 'linear-gradient(135deg, #1F2937 0%, #2d3748 100%)' }}
       >
         <div className="absolute inset-0 bg-pattern opacity-5" />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.12) 0%, transparent 60%)' }}
-        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.12) 0%, transparent 60%)' }} />
         <div className="container-narrow relative z-10">
           <AnimateIn direction="up">
             <div className="text-4xl mb-4">💛</div>
@@ -69,10 +38,7 @@ export default function FamilyGalleryPage() {
         {/* Back link */}
         <AnimateIn direction="up">
           <div className="mb-10">
-            <Link
-              href="/#family"
-              className="inline-flex items-center gap-2 font-inter text-sm text-text-muted hover:text-gold transition-colors"
-            >
+            <Link href="/#family" className="inline-flex items-center gap-2 font-inter text-sm text-text-muted hover:text-gold transition-colors">
               <ArrowLeft className="w-4 h-4" /> Back to homepage
             </Link>
           </div>
@@ -84,7 +50,7 @@ export default function FamilyGalleryPage() {
           description={`${FAMILY_MEMBERS.length} family members across South Sudan, Ethiopia, and Uganda have shared their pride, their love, and their blessings for Nyatony.`}
         />
 
-        {/* ── Intro quote ── */}
+        {/* Intro quote */}
         <AnimateIn direction="up">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <blockquote
@@ -96,58 +62,41 @@ export default function FamilyGalleryPage() {
           </div>
         </AnimateIn>
 
-        {/* ── All family member cards ── */}
+        {/* All family member cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {FAMILY_MEMBERS.map((member, i) => (
             <AnimateIn key={member.id} delay={i * 80} direction="up">
               <article className="card p-8 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
 
-                {/* Member header */}
-                <div className="flex items-center gap-5 mb-6 pb-6 border-b border-gray-100 dark:border-dark-border">
-                  {/* Avatar */}
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center text-3xl flex-shrink-0 border-2"
+                {/* Member header — no avatar, just name, relationship, descriptor */}
+                <div className="mb-6 pb-6 border-b border-gray-100 dark:border-dark-border">
+                  <h3 className="font-playfair text-xl font-bold text-text dark:text-white mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="font-inter text-xs uppercase tracking-widest text-gold font-semibold mb-3">
+                    {member.relationship}
+                  </p>
+                  <span
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-inter font-semibold"
                     style={{
-                      backgroundColor: 'rgba(201,162,39,0.08)',
-                      borderColor: 'rgba(201,162,39,0.25)',
+                      backgroundColor: 'rgba(201,162,39,0.1)',
+                      color: '#C9A227',
+                      border: '1px solid rgba(201,162,39,0.3)',
                     }}
                   >
-                    {getAvatar(member.descriptor)}
-                  </div>
-
-                  <div>
-                    <h3 className="font-playfair text-xl font-bold text-text dark:text-white mb-0.5">
-                      {member.name}
-                    </h3>
-                    <p className="font-inter text-xs uppercase tracking-widest text-gold font-semibold mb-2">
-                      {member.relationship}
-                    </p>
-                    {/* Descriptor badge */}
-                    <span
-                      className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-inter font-semibold"
-                      style={{
-                        backgroundColor: 'rgba(201,162,39,0.1)',
-                        color: '#C9A227',
-                        border: '1px solid rgba(201,162,39,0.3)',
-                      }}
-                    >
-                      ✦ {member.descriptor}
-                    </span>
-                  </div>
+                    ✦ {member.descriptor}
+                  </span>
                 </div>
 
                 {/* Full message */}
                 <div className="flex-1 relative">
-                  <Heart
-                    className="w-5 h-5 absolute -top-1 -left-1 opacity-20"
-                    style={{ color: '#C9A227' }}
-                  />
+                  <Heart className="w-5 h-5 absolute -top-1 -left-1 opacity-20" style={{ color: '#C9A227' }} />
                   <p className="font-inter text-base text-text-muted dark:text-gray-400 leading-[1.9] italic pl-6">
                     &ldquo;{member.message}&rdquo;
                   </p>
                 </div>
 
-                {/* Member number */}
+                {/* Counter */}
                 <div className="mt-6 pt-4 border-t border-gray-50 dark:border-dark-border/50 text-right">
                   <span className="font-inter text-xs text-gold/50 font-semibold">
                     #{i + 1} of {FAMILY_MEMBERS.length}
@@ -158,7 +107,7 @@ export default function FamilyGalleryPage() {
           ))}
         </div>
 
-        {/* ── Summary section ── */}
+        {/* Summary banner */}
         <AnimateIn direction="up">
           <div
             className="rounded-3xl p-10 md:p-14 text-center mb-12"
@@ -169,9 +118,9 @@ export default function FamilyGalleryPage() {
               One Family. One Story. One Legacy.
             </h3>
             <p className="font-inter text-white/65 max-w-2xl mx-auto leading-relaxed mb-8">
-              From South Sudan to Ethiopia to Uganda — Nyatony&apos;s family is scattered across
-              countries, but united in their pride for the woman she has become. She is Educated.
-              Confident. Patient. Independent. Respectful. Golden.
+              From South Sudan to Ethiopia to Uganda — Nyatony&apos;s family is scattered across countries,
+              but united in their pride for the woman she has become. She is Educated. Confident.
+              Patient. Independent. Respectful. Golden.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               {FAMILY_MEMBERS.map((m) => (
@@ -191,7 +140,7 @@ export default function FamilyGalleryPage() {
           </div>
         </AnimateIn>
 
-        {/* ── CTA ── */}
+        {/* CTAs */}
         <AnimateIn direction="up">
           <div className="text-center flex flex-wrap justify-center gap-4">
             <Link href="/biography" className="btn-primary">

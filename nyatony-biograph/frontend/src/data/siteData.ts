@@ -149,7 +149,7 @@ export const FAMILY_MEMBERS = [
   },
   {
     id: 4,
-    name: 'Yak Chuol Tut',
+    name: 'Nhial Chuol Tut, Lony Chuol Tut, Dak Nyuot Machar & Duol Nyuot Machar',
     relationship: 'Family Member',
     descriptor: 'Patient',
     portrait: '/images/family/yak.jpg',
@@ -158,6 +158,15 @@ export const FAMILY_MEMBERS = [
   },
   {
     id: 5,
+    name: 'Yak Chuol Tut',
+    relationship: 'Family Member',
+    descriptor: 'Patient',
+    portrait: '/images/family/yak.jpg',
+    message:
+      'Patient — because she has demonstrated remarkable patience, resilience, and perseverance throughout her journey. I admire her patience, perseverance, and unwavering faith throughout the many years she waited for the right time. I have learned the importance of respecting, honoring, and remaining committed to one\'s family.',
+  },
+  {
+    id: 6,
     name: 'Nyayin Mawai Chuol',
     relationship: 'Grandmother',
     descriptor: 'Independent',
@@ -166,7 +175,7 @@ export const FAMILY_MEMBERS = [
       'I am deeply grateful for the patience, perseverance, and determination you have shown throughout your journey. I am incredibly proud of the woman you have become. May God bless your marriage, guide your path, and fill your life with love, joy, and lasting peace. Independent — because she has grown into a strong, self-reliant, and responsible young woman.',
   },
   {
-    id: 6,
+    id: 7,
     name: 'Nyamai Yak Chuol Tut',
     relationship: 'Family Member',
     descriptor: 'Educated',
@@ -175,7 +184,7 @@ export const FAMILY_MEMBERS = [
       'Educated — because her commitment to learning and academic excellence has been truly inspiring. Nyatony distinguishes herself through her commitment to education and her determination to achieve academic success.',
   },
   {
-    id: 7,
+    id: 8,
     name: 'Chuol Par Tai',
     relationship: 'Family Member',
     descriptor: 'Respectful',
@@ -184,8 +193,8 @@ export const FAMILY_MEMBERS = [
       'Respectful — because she respects herself and treats others with dignity, humility, and integrity. Congratulations on your graduation and wedding. May God bless your marriage, grant you wisdom, and lead you to a future filled with happiness, peace, and success.',
   },
   {
-    id: 8,
-    name: 'Galam Kai Chuol Tut',
+    id: 9,
+    name: 'Galam Kai Chuol',
     relationship: 'Family Member',
     descriptor: 'Golden',
     portrait: '/images/nyatony-portrait.jpg',
