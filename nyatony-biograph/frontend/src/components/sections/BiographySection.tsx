@@ -49,23 +49,6 @@ export default function BiographySection() {
           title="The Story of Nyatony Kai Chuol Tut"
         />
 
-        {/* ── Reading progress bar ── */}
-        <AnimateIn direction="up">
-          <div className="max-w-7xl mx-auto mb-8">
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-inter text-xs text-text-muted">
-                Chapter {chapterIndex + 1} of {BIOGRAPHY_CHAPTERS.length}
-              </span>
-              <span className="font-inter text-xs text-gold font-semibold">
-                {Math.round(readProgress)}% read
-              </span>
-            </div>
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${readProgress}%` }} />
-            </div>
-          </div>
-        </AnimateIn>
-
         {/* ── Full-width story content ── */}
         <AnimateIn direction="up">
           <div
