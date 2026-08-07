@@ -7,7 +7,6 @@ const rateLimit = require('express-rate-limit')
 const path    = require('path')
 
 const { connectDB, dbReady } = require('./config/database')
-const cleanStaleRecords      = require('./config/cleanup')
 const routes = require('./routes/index')
 
 const app = express()
@@ -107,10 +106,5 @@ app.listen(PORT, () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 })
 
-// ── Connect to MongoDB Atlas then clean stale records ────────────────────
-connectDB().then(async () => {
-  if (dbReady()) {
-    console.log('🧹 Checking for stale upload records...')
-    await cleanStaleRecords()
-  }
-})
+// ── Connect to MongoDB Atlas ──────────────────────────────────────────────
+connectDB()

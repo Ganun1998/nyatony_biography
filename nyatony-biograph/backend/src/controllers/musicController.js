@@ -1,6 +1,7 @@
 const Music = require('../models/Music')
-const fs    = require('fs')
-const path  = require('path')
+const { useCloudinary } = require('../config/cloudinary')
+const fs   = require('fs')
+const path = require('path')
 
 // GET /api/music — public
 exports.getAll = async (req, res) => {
@@ -13,19 +14,22 @@ exports.getAll = async (req, res) => {
   }
 }
 
-// POST /api/admin/music — upload track
-// Field name: 'audio' (matches uploadMusic.single('audio') in routes)
+// POST /api/admin/music — upload (field: 'audio')
 exports.upload = async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ success: false, message: 'No audio file uploaded. Make sure the field name is "audio".' })
+    if (!req.file) return res.status(400).json({ success: false, message: 'No audio file uploaded.' })
     const { title, artist, category, duration } = req.body
     if (!title || !artist) return res.status(400).json({ success: false, message: 'Title and artist are required.' })
+
+    const src = useCloudinary
+      ? req.file.path                                // full Cloudinary URL
+      : `/uploads/music/${req.file.filename}`        // local relative path
 
     const track = await Music.create({
       title:    title.trim(),
       artist:   artist.trim(),
       category: category || 'Romantic',
-      src:      `/uploads/music/${req.file.filename}`,
+      src,
       duration: duration || '0:00',
       artwork:  req.body.artwork || '',
     })
@@ -35,11 +39,16 @@ exports.upload = async (req, res) => {
   }
 }
 
-// GET /api/music/:id/download — stream file to browser
+// GET /api/music/:id/download
 exports.download = async (req, res) => {
   try {
     const track = await Music.findById(req.params.id)
     if (!track) return res.status(404).json({ success: false, message: 'Track not found.' })
+
+    // Cloudinary URL — redirect
+    if (useCloudinary || track.src.startsWith('http')) {
+      return res.redirect(track.src)
+    }
 
     const filePath = path.join(__dirname, '../../', track.src)
     if (!fs.existsSync(filePath)) return res.status(404).json({ success: false, message: 'File not found on disk.' })
@@ -68,10 +77,12 @@ exports.delete = async (req, res) => {
   try {
     const track = await Music.findById(req.params.id)
     if (!track) return res.status(404).json({ success: false, message: 'Track not found.' })
-    if (track.src) {
+
+    if (!useCloudinary && track.src && !track.src.startsWith('http')) {
       const filePath = path.join(__dirname, '../../', track.src)
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
     }
+
     await track.deleteOne()
     res.json({ success: true, message: 'Track deleted.' })
   } catch (err) {

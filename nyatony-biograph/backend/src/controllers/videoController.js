@@ -1,6 +1,7 @@
 const Video = require('../models/Video')
-const fs    = require('fs')
-const path  = require('path')
+const { useCloudinary } = require('../config/cloudinary')
+const fs   = require('fs')
+const path = require('path')
 
 // GET /api/videos — public
 exports.getAll = async (req, res) => {
@@ -16,37 +17,46 @@ exports.getAll = async (req, res) => {
   }
 }
 
-// POST /api/admin/videos — upload file OR add YouTube
-// Field name: 'video'
+// POST /api/admin/videos — upload file OR add YouTube (field: 'video')
 exports.upload = async (req, res) => {
   try {
     const { title, description, category, youtubeId, duration } = req.body
     if (!title) return res.status(400).json({ success: false, message: 'Title is required.' })
-    if (!req.file && !youtubeId) return res.status(400).json({ success: false, message: 'Either upload a video file or provide a YouTube ID.' })
+    if (!req.file && !youtubeId) return res.status(400).json({ success: false, message: 'Upload a video or provide a YouTube ID.' })
 
-    const videoData = {
+    const src = req.file
+      ? (useCloudinary ? req.file.path : `/uploads/videos/${req.file.filename}`)
+      : ''
+
+    const thumbnail = req.body.thumbnail ||
+      (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg` : '')
+
+    const video = await Video.create({
       title:       title.trim(),
       description: description?.trim() || '',
       category:    category || 'Other',
       youtubeId:   youtubeId || '',
       duration:    duration || '0:00',
-      src:         req.file ? `/uploads/videos/${req.file.filename}` : '',
-      thumbnail:   req.body.thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg` : ''),
-    }
-
-    const video = await Video.create(videoData)
+      src,
+      thumbnail,
+    })
     res.status(201).json({ success: true, data: video })
   } catch (err) {
     res.status(500).json({ success: false, message: err.message })
   }
 }
 
-// GET /api/videos/:id/download — stream uploaded video file
+// GET /api/videos/:id/download
 exports.download = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
     if (!video) return res.status(404).json({ success: false, message: 'Video not found.' })
-    if (!video.src || video.youtubeId) return res.status(400).json({ success: false, message: 'This video is a YouTube link and cannot be downloaded here.' })
+    if (!video.src || video.youtubeId) return res.status(400).json({ success: false, message: 'YouTube videos cannot be downloaded here.' })
+
+    // Cloudinary URL — redirect
+    if (useCloudinary || video.src.startsWith('http')) {
+      return res.redirect(video.src)
+    }
 
     const filePath = path.join(__dirname, '../../', video.src)
     if (!fs.existsSync(filePath)) return res.status(404).json({ success: false, message: 'File not found on disk.' })
@@ -77,10 +87,12 @@ exports.delete = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
     if (!video) return res.status(404).json({ success: false, message: 'Video not found.' })
-    if (video.src && !video.youtubeId) {
+
+    if (!useCloudinary && video.src && !video.src.startsWith('http') && !video.youtubeId) {
       const filePath = path.join(__dirname, '../../', video.src)
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
     }
+
     await video.deleteOne()
     res.json({ success: true, message: 'Video deleted.' })
   } catch (err) {

@@ -3,7 +3,7 @@
 // ============================================================
 
 export const SITE_META = {
-  name: 'Nyatony Kai Chuol',
+  name: 'Nyatony Kai Chuol Tut',
   tagline: 'A Journey of Faith, Education, Perseverance, and Love.',
   weddingDate: new Date('2026-12-20T14:00:00'),
   graduationDate: new Date('2026-07-15'),
@@ -134,13 +134,13 @@ export const FAMILY_MEMBERS = [
     name: 'Nyamuoka Tap Jock',
     relationship: 'Family Member',
     descriptor: 'Confident',
-    portrait: '/images/family/nyamuoka.jpg',
+    portrait: '/images/bio-intro.jpg',
     message:
       'Confident — because she believes in herself and draws strength from the guidance, encouragement, and values instilled by her father. I admire her faithfulness, integrity, and steadfast commitment to her values. I have learned the value of being true to oneself and the importance of hard work, dedication, and perseverance.',
   },
   {
     id: 3,
-    name: 'Nyathach Nyachung',
+    name: 'Nyathach Nyot Chung',
     relationship: 'Family Member',
     descriptor: 'Confident',
     portrait: '/images/family/nyathach.jpg',
@@ -200,7 +200,7 @@ export const FAMILY_MEMBERS = [
 export const FAQ_ITEMS = [
   {
     id: 1,
-    question: 'Who is Nyatony Kai Tut?',
+    question: 'Who is Nyatony Kai Chuol Tut?',
     answer:
       'Nyatony Kai Chuol Tut is a South Sudanese woman born and raised in Wan, Ayod, South Sudan. She is a university student at New Generation College in Addis Ababa, pursuing a Bachelor of Arts in Global Studies (graduating 2026). She is the first girl in her family to attend and graduate from university — a historic milestone that has made her an inspiration to her entire family and community.',
   },
@@ -269,12 +269,8 @@ export const GRADUATION_DATA = {
     { icon: '🏆', title: 'Family Pride', desc: 'A source of immense pride and inspiration for the entire extended family' },
   ],
   timeline: [
-    { year: '2004', event: 'Joined Malakal Primary School, South Sudan, at age 7' },
-    { year: '2004–2010', event: 'Primary School — consistently ranked in top 10 students' },
-    { year: '2011', event: 'Began High School — new challenges, lasting friendships' },
-    { year: '2015', event: 'Completed Secondary School education' },
-    { year: '2022', event: 'Enrolled at New Generation College, Addis Ababa, Ethiopia' },
-    { year: '2023', event: 'Deepened focus on Global Studies and community development' },
+    { year: '2023', event: 'Enrolled at New Generation College, Addis Ababa, Ethiopia' },
+    { year: '2024', event: 'Deepened focus on Global Studies and community development' },
     { year: '2025', event: 'Completed final year coursework with dedication and discipline' },
     { year: '2026', event: 'Graduated — Bachelor of Arts in Global Studies 🎓 (First in the family)' },
   ],
@@ -314,12 +310,6 @@ export const FEATURED_VIDEOS: any[] = [];
 // ============================================================
 // GALLERY
 // ============================================================
-export const GALLERY_CATEGORIES = [
-  { id: 'childhood', label: 'Childhood', icon: '🌱', count: 24 },
-  { id: 'graduation', label: 'Graduation', icon: '🎓', count: 36 },
-  { id: 'wedding', label: 'Wedding', icon: '💍', count: 48 },
-  { id: 'family', label: 'Family', icon: '👨‍👩‍👧‍👦', count: 30 },
-]
 
 export const GALLERY_PREVIEW = [
   { id: 1, category: 'graduation', src: '/images/gallery/grad-1.jpg', alt: 'Graduation Day at New Generation College' },

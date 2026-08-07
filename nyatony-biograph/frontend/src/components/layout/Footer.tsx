@@ -29,15 +29,11 @@ export default function Footer() {
   return (
     <footer className="bg-text dark:bg-dark-bg text-white">
       <div className="container-wide px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <h3 className="font-playfair text-2xl font-bold mb-2">Nyatony Kai Chuol</h3>
             <div className="w-16 h-0.5 mb-4" style={{ backgroundColor: '#C9A227' }} />
-            <p className="font-inter text-gray-400 text-sm leading-relaxed mb-6">
-              A biography, graduation portfolio, and wedding tribute — preserving the story of faith,
-              education, perseverance, and love for generations to come.
-            </p>
             <div className="flex items-center gap-3">
               {[
                 { href: SITE_META.social.facebook, icon: <Facebook className="w-4 h-4" />, label: 'Facebook' },
@@ -56,23 +52,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <div key={section}>
-              <h4 className="font-inter font-semibold text-sm uppercase tracking-widest text-gold mb-4">
-                {section}
-              </h4>
-              <ul className="space-y-2.5">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="font-inter text-sm text-gray-400 hover:text-white transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
 
         {/* Contact row */}

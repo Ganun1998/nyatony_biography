@@ -1,7 +1,7 @@
 const express = require('express')
 const router  = express.Router()
-const { protect, adminOnly }          = require('../middleware/auth')
-const { uploadImage, uploadMusic, uploadVideo } = require('../middleware/upload')
+const { protect, adminOnly }                    = require('../middleware/auth')
+const { uploadImage, uploadMusic, uploadVideo } = require('../config/cloudinary')
 
 // Controllers
 const authCtrl    = require('../controllers/authController')
