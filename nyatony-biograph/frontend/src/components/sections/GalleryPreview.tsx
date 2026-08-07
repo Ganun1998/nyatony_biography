@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
 
+type GalleryCategory = { id: string; label: string; icon: string; count: number }
+
 export default function GalleryPreview() {
   const [images, setImages]   = useState<GalleryImage[]>([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +41,7 @@ export default function GalleryPreview() {
 
         {/* Category badges with live counts */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {GALLERY_CATEGORIES.map((cat: { id: string; label: string; icon: string; count: number }) => {
+          {GALLERY_CATEGORIES.map((cat: GalleryCategory) => {
             const count = catCount(cat.id) || cat.count
             return (
               <Link
