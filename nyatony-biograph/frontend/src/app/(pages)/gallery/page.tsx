@@ -58,7 +58,7 @@ export default function GalleryPage() {
           >
             All Photos {images.length > 0 && <span className="ml-1 opacity-60">({images.length})</span>}
           </button>
-          {GALLERY_CATEGORIES.map((cat) => {
+          {GALLERY_CATEGORIES.map((cat: { id: string; label: string; icon: string; count: number }) => {
             const count = images.filter(i => i.category === cat.id).length
             return (
               <button

@@ -321,3 +321,14 @@ export const GALLERY_PREVIEW = [
   { id: 7, category: 'wedding', src: '/images/gallery/wedding-2.jpg', alt: 'Traditional Ceremony' },
   { id: 8, category: 'childhood', src: '/images/gallery/child-2.jpg', alt: 'Malakal Primary School Days' },
 ]
+
+// ============================================================
+// GALLERY CATEGORIES
+// ============================================================
+export const GALLERY_CATEGORIES = [
+  { id: 'childhood',  label: 'Childhood',  icon: '🌱', count: 0 },
+  { id: 'graduation', label: 'Graduation', icon: '🎓', count: 0 },
+  { id: 'wedding',    label: 'Wedding',    icon: '💍', count: 0 },
+  { id: 'family',     label: 'Family',     icon: '👨‍👩‍👧‍👦', count: 0 },
+  { id: 'other',      label: 'Other',      icon: '📸', count: 0 },
+]

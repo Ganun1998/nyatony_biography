@@ -39,7 +39,7 @@ export default function GalleryPreview() {
 
         {/* Category badges with live counts */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {GALLERY_CATEGORIES.map((cat) => {
+          {GALLERY_CATEGORIES.map((cat: { id: string; label: string; icon: string; count: number }) => {
             const count = catCount(cat.id) || cat.count
             return (
               <Link
@@ -120,9 +120,6 @@ export default function GalleryPreview() {
                 className="rounded-xl border-2 border-dashed border-gray-200 dark:border-dark-border overflow-hidden"
               >
                 <div style={{ paddingTop: '100%', position: 'relative', backgroundColor: i % 2 === 0 ? '#F7E7E7' : '#FAF9F6' }}>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>
-                    {['🎓', '💍', '👨‍👩‍👧', '🌱', '🎓', '💍', '👨‍👩‍👧', '🌱'][i]}
-                  </div>
                 </div>
               </div>
             ))}
